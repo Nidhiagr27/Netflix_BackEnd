@@ -1,6 +1,5 @@
 package com.project;
 
-import com.project.exceptions.UserDoesNotExist;
 import com.project.exceptions.UserNotFoundException;
 import com.project.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class UserController {
              userService.updatePassword(userID, newPassword);
             return ResponseEntity.status(HttpStatus.OK).body(true);
         }
-        catch(UserDoesNotExist ex){
+        catch(UserNotFoundException ex){
             System.out.println(ex.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(false);
 

@@ -33,15 +33,18 @@ public class UserAccessor {
         return false;
     }
 
-    public UsersDTO getUserByUserID(String userID) {
-        UsersDTO usersDTO = null;
-        String query = "SELECT userId,name,email,password,phone,state FROM users where userId=?";
+    public UsersDTO getUser(String query,String email,String userID){
+        UsersDTO usersDTO=new UsersDTO();
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setString(1, userID);
+            if(userID!=null) {
+                preparedStatement.setString(1, userID);
+            }else{
+                preparedStatement.setString(1,email);
+            }
             ResultSet result = preparedStatement.executeQuery();
             if (result.next()) {
-                usersDTO=new UsersDTO();
+
                 usersDTO.setUserID(result.getString(1));
                 usersDTO.setName(result.getString(2));
                 usersDTO.setEmail(result.getString(3));
@@ -52,36 +55,18 @@ public class UserAccessor {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return usersDTO;
-    }
-
-    public UsersDTO getUserByEmail(String email)  {
-        UsersDTO usersDTO=null;
-        String query= "SELECT userId,name,email,password,phone,state FROM users where email=?";
-        try(Connection connection= dataSource.getConnection()){
-            PreparedStatement preparedStatement=connection.prepareStatement(query);
-            preparedStatement.setString(1,email);
-            ResultSet result=preparedStatement.executeQuery();
-            if(result.next()){
-                usersDTO=new UsersDTO();
-                usersDTO.setUserID(result.getString(1));
-                usersDTO.setName(result.getString(2));
-                usersDTO.setEmail(result.getString(3));
-                usersDTO.setPassword(result.getString(4));
-                usersDTO.setPhone(result.getString(5));
-                usersDTO.setState(UserAccountState.valueOf(result.getString(6)));
-
-
-
-            }
-
-        }
-        catch(SQLException ex){
-            ex.printStackTrace();
-        }
         finally {
             return usersDTO;
         }
+    }
 
+    public UsersDTO getUserByUserID(String userID) {
+        String query = "SELECT userId,name,email,password,phone,state FROM users where userId=?";
+        return getUser(query,null,userID);
+    }
+
+    public UsersDTO getUserByEmail(String email)  {
+        String query= "SELECT userId,name,email,password,phone,state FROM users where email=?";
+        return getUser(query,email,null);
     }
 }
