@@ -34,7 +34,7 @@ public class UserAccessor {
     }
 
     public UsersDTO getUser(String query,String email,String userID){
-        UsersDTO usersDTO=new UsersDTO();
+        UsersDTO usersDTO=null;
         try (Connection connection = dataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             if(userID!=null) {
@@ -44,7 +44,7 @@ public class UserAccessor {
             }
             ResultSet result = preparedStatement.executeQuery();
             if (result.next()) {
-
+                usersDTO=new UsersDTO();
                 usersDTO.setUserID(result.getString(1));
                 usersDTO.setName(result.getString(2));
                 usersDTO.setEmail(result.getString(3));
