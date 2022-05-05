@@ -6,7 +6,8 @@ import java.util.Date;
 
 @Data
 public class OTP_DTO {
-    private String userID;
+    private String otpId;
+    private String userId;
     private String otp;
     private OTP_Type otpType;
     private String sentTo;

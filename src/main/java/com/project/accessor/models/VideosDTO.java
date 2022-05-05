@@ -7,10 +7,10 @@ import java.util.Date;
 
 @Data
 public class VideosDTO {
-    private String videoID;
+    private String videoId;
     private String name;
-    private String seriesID;
-    private String showID;
+    private String seriesId;
+    private String showId;
     private double rating;
     private Date releaseDate;
     private  Integer totalLength;

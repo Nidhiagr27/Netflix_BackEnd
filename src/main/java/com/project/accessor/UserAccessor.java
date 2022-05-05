@@ -1,6 +1,7 @@
 package com.project.accessor;
 
 import com.project.accessor.models.UserAccountState;
+import com.project.accessor.models.UserRole;
 import com.project.accessor.models.UsersDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
@@ -45,19 +46,19 @@ public class UserAccessor {
             ResultSet result = preparedStatement.executeQuery();
             if (result.next()) {
                 usersDTO=new UsersDTO();
-                usersDTO.setUserID(result.getString(1));
+                usersDTO.setUserId(result.getString(1));
                 usersDTO.setName(result.getString(2));
                 usersDTO.setEmail(result.getString(3));
                 usersDTO.setPassword(result.getString(4));
                 usersDTO.setPhone(result.getString(5));
                 usersDTO.setState(UserAccountState.valueOf(result.getString(6)));
+                usersDTO.setRole(UserRole.valueOf(result.getString(7)));
+                return usersDTO;
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        finally {
-            return usersDTO;
-        }
+        return usersDTO;
     }
 
     public UsersDTO getUserByUserID(String userID) {
@@ -66,7 +67,7 @@ public class UserAccessor {
     }
 
     public UsersDTO getUserByEmail(String email)  {
-        String query= "SELECT userId,name,email,password,phone,state FROM users where email=?";
+        String query= "SELECT userId,name,email,password,phone,state,role FROM users where email=?";
         return getUser(query,email,null);
     }
 }

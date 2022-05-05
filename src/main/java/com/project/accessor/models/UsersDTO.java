@@ -4,11 +4,12 @@ import lombok.Data;
 
 @Data
 public class UsersDTO {
-    private String userID;
+    private String userId;
     private String name;
     private String email;
     private String password;
     private String phone;
     private UserAccountState state; //active,deactivated, suspended
+    private UserRole role;
 
    }

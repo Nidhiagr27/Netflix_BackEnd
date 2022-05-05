@@ -28,4 +28,9 @@ public class UserService {
         return userAccessor.updatePassword(userID,newPassword);
     }
 
+
+    //this method is for login
+    public UsersDTO getUserByEmail(String email) {
+       return userAccessor.getUserByEmail(email);
+    }
 }
