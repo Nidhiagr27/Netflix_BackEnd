@@ -1,8 +1,11 @@
 package com.project.accessor.models;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Builder
+@Getter
 public class UsersDTO {
     private String userId;
     private String name;
@@ -10,6 +13,6 @@ public class UsersDTO {
     private String password;
     private String phone;
     private UserAccountState state; //active,deactivated, suspended
-    private UserRole role;
+    private UserRole role; //role_user, role_customer
 
    }

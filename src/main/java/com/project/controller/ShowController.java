@@ -1,4 +1,4 @@
-package com.project;
+package com.project.controller;
 
 import com.project.accessor.models.ShowsDTO;
 import com.project.exceptions.DependencyFailureException;

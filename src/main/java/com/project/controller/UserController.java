@@ -1,6 +1,8 @@
-package com.project;
+package com.project.controller;
 
 import com.project.accessor.models.UsersDTO;
+import com.project.controller.models.CreateUserInput;
+import com.project.exceptions.InvalidDataException;
 import com.project.exceptions.UserNotFoundException;
 import com.project.security.Roles;
 import com.project.service.AuthService;
@@ -37,6 +39,8 @@ public class UserController {
         }
     }
 
+
+    @Secured({Roles.User,Roles.Customer})
     @PutMapping("/password")
     public ResponseEntity<Boolean> updatePassword(@RequestParam("userID")
                                                    String userID, @RequestParam("newPassword") String newPassword){
@@ -52,27 +56,21 @@ public class UserController {
         }
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestParam ("email") String email,@RequestParam ("password") String password){
-        UsersDTO usersDTO=userService.getUserByEmail(email);
-        if(usersDTO != null && usersDTO.getPassword().equals(password)){
-            Date expirationDate= new Date(System.currentTimeMillis()+ SecurityConstants.EXPIRATION_TIME);
-            String token= Jwts.builder()
-                    .setSubject(email)
-                    .setAudience(usersDTO.getRole().toString())
-                    .setExpiration(expirationDate)
-                    .signWith(SignatureAlgorithm.HS512,SecurityConstants.SECRET.getBytes())
-                    .compact();
-           if(authService.storeToken(usersDTO.getUserId(), token)){
-               return ResponseEntity.status(HttpStatus.OK).body(token);
-           }
-           else{
-               return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unable to store the token");
-           }
-
-        }
-
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid email or password");
-
+    @PostMapping("/user")
+    public ResponseEntity<String> addNewUser(@RequestBody CreateUserInput createUserInput){
+         String name= createUserInput.getName();
+         String email= createUserInput.getEmail();
+         String password= createUserInput.getPassword();
+         String phone= createUserInput.getPhone();
+         try {
+             userService.addNewUser(name, email, password, phone);
+             return ResponseEntity.status(HttpStatus.OK).body("User created successfully!");
+         }
+         catch(InvalidDataException ex){
+             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+         }
+         catch(Exception ex){
+             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ex.getMessage());
+         }
     }
 }
